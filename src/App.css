@@ -1,0 +1,86 @@
+/* Base App Layout */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: #1e1e24; /* Dark background to match your screenshot */
+  color: #ffffff;
+}
+
+.App {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+header h1 {
+  margin-bottom: 20px;
+  font-size: 3rem;
+}
+
+/* Room Selector Container */
+.room-selector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+.room-selector h2 {
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+/* Uses Flexbox to create equal, responsive spacing between buttons */
+.button-container {
+  display: flex;
+  gap: 15px; 
+  justify-content: center;
+  flex-wrap: wrap; 
+  margin-top: 20px;
+}
+
+/* Styles the Room buttons to look modern and attractive */
+.button-container button {
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: #646cff; /* A clean, modern blue/purple */
+  border: none;
+  border-radius: 8px; /* Smooth rounded corners */
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+  transition: all 0.2s ease-in-out; 
+}
+
+/* Hover and active states for Room buttons */
+.button-container button:hover {
+  background-color: #535bf2; 
+  transform: translateY(-2px); /* Lifts the button slightly */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.button-container button:active {
+  transform: translateY(0); /* Pushes the button down when clicked */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Specific styles for the Leave Room button */
+.leave-button {
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: bold;
+  color: white;
+  background-color: #ef4444; /* Red color to indicate leaving/closing */
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 30px;
+  transition: all 0.2s ease-in-out;
+}
+
+.leave-button:hover {
+  background-color: #dc2626;
+  transform: translateY(-2px);
+}
