@@ -1,16 +1,38 @@
-# React + Vite
+# 💬 Multi-Room React Chat App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A fast, real-time chat application built with **React.js** and **Firebase**. This project allows users to seamlessly switch between different chat rooms and communicate instantly, featuring a clean, modern, and responsive user interface.
 
-Currently, two official plugins are available:
+### 🚀 [View Live Demo]  https://kevinptom.github.io/cl-react-chatapp/
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## ✨ Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+* **Real-Time Messaging:** Powered by Firebase Cloud Firestore, messages appear instantly across all connected clients.
+* **Multiple Chat Rooms:** Users can dynamically join and leave different rooms (e.g., General, React-Help, Random).
+* **Modern UI/UX:** Built with a dark-mode-inspired color palette, responsive CSS Flexbox layouts, and interactive hover states.
+* **Lightning Fast Build:** Bootstrapped with [Vite](https://vitejs.dev/) for an ultra-fast development experience.
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🛠️ Tech Stack
+
+* **Frontend:** React.js (Vite)
+* **Backend/Database:** Firebase Cloud Firestore
+* **Dependencies:** `firebase`, `react-firebase-hooks`
+* **Styling:** Vanilla CSS (Flexbox, CSS Variables)
+* **Hosting:** GitHub Pages & `gh-pages`
+
+---
+
+## 💻 Getting Started
+
+Follow these steps to set up the project locally on your machine.
+
+### Prerequisites
+* [Node.js](https://nodejs.org/) installed on your machine.
+* A [Firebase](https://console.firebase.google.com/) account and project.
+
+### 1. Clone the Repository
+```bash
+git clone  https://github.com/kevinptom/cl-react-chatapp.git
