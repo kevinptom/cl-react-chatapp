@@ -1,26 +1,29 @@
-# 💬 Multi-Room React Chat App
+# 💬 SpaceChat - Premium Multi-Room React Chat App
 
-A fast, real-time chat application built with **React.js** and **Firebase**. This project allows users to seamlessly switch between different chat rooms and communicate instantly, featuring a clean, modern, and responsive user interface.
+SpaceChat is a fast, real-time chat application built with **React.js** and **Firebase**. It features a stunning glassmorphic visual redesign, dynamic room creation, search filters, and persistent user nicknames, providing an immersive and fast messaging experience.
 
-### 🚀 [View Live Demo]  https://kevinptom.github.io/cl-react-chatapp/
+### 🚀 [View Live Demo](https://kevinptom.github.io/cl-react-chatapp/)
 
 ---
 
 ## ✨ Features
 
 * **Real-Time Messaging:** Powered by Firebase Cloud Firestore, messages appear instantly across all connected clients.
-* **Multiple Chat Rooms:** Users can dynamically join and leave different rooms (e.g., General, React-Help, Random).
-* **Modern UI/UX:** Built with a dark-mode-inspired color palette, responsive CSS Flexbox layouts, and interactive hover states.
+* **Dynamic Room Creation:** Create new chat rooms on-the-fly with custom names, descriptions, categories (Tech, Social, Gaming, Other), and emoji badges.
+* **Search & Filters:** Instantly search rooms by title/description or filter by category tabs in the lobby.
+* **Independent User Identities:** Generates a random fun nickname on startup (persisted in `localStorage`) and allows users to customize their display name through a modal settings panel.
+* **Interactive Message bubbles & Avatars:** Features self/other bubble alignment (gradient for current user) and initials-based user avatar badges styled with dynamic color hashing.
+* **Premium Glassmorphic UI/UX:** Stylized with a dark mode scheme, smooth entrance transitions, customized scrollbars, and a clean split-panel desktop layout using the **Plus Jakarta Sans** font.
 * **Lightning Fast Build:** Bootstrapped with [Vite](https://vitejs.dev/) for an ultra-fast development experience.
 
 ---
 
 ## 🛠️ Tech Stack
 
-* **Frontend:** React.js (Vite)
-* **Backend/Database:** Firebase Cloud Firestore
-* **Dependencies:** `firebase`, `react-firebase-hooks`
-* **Styling:** Vanilla CSS (Flexbox, CSS Variables)
+* **Frontend Framework:** React.js (Vite)
+* **Realtime Database:** Firebase Cloud Firestore
+* **State/Firestore Hooks:** `react-firebase-hooks`
+* **Styling:** Premium Vanilla CSS (variables, glassmorphic filters, keyframe animations)
 * **Hosting:** GitHub Pages & `gh-pages`
 
 ---
@@ -35,4 +38,6 @@ Follow these steps to set up the project locally on your machine.
 
 ### 1. Clone the Repository
 ```bash
-git clone  https://github.com/kevinptom/cl-react-chatapp.git
+git clone https://github.com/kevinptom/cl-react-chatapp.git
+```
+
