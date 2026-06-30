@@ -5,6 +5,7 @@ import {
   createUserWithEmailAndPassword, 
   updateProfile, 
   signInWithPopup, 
+  signInWithRedirect,
   GoogleAuthProvider 
 } from 'firebase/auth';
 
@@ -64,7 +65,14 @@ export default function Auth() {
       await signInWithPopup(auth, provider);
     } catch (err) {
       console.error(err);
-      if (err.code !== 'auth/popup-closed-by-user') {
+      if (err.code === 'auth/popup-blocked') {
+        try {
+          await signInWithRedirect(auth, provider);
+        } catch (redirectErr) {
+          console.error(redirectErr);
+          setError('Google Sign-In failed (popup blocked). Please allow popups or try again: ' + redirectErr.message);
+        }
+      } else if (err.code !== 'auth/popup-closed-by-user') {
         setError('Google Sign-In failed: ' + err.message);
       }
     } finally {
