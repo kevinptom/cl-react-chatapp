@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { db } from './firebase';
+import { db, dataConverter } from './firebase';
 import { collection, addDoc, query, orderBy, serverTimestamp } from 'firebase/firestore';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { getStringColor } from './App';
@@ -11,11 +11,11 @@ export default function ChatRoom({ roomName, user }) {
   const userName = user ? (user.displayName || user.email?.split('@')[0] || 'Anonymous') : 'Anonymous';
 
   // Reference the specific room's messages collection
-  const messagesRef = collection(db, `rooms/${roomName}/messages`);
+  const messagesRef = collection(db, `rooms/${roomName}/messages`).withConverter(dataConverter);
   const q = query(messagesRef, orderBy('createdAt', 'asc'));
   
   // Listen for real-time updates
-  const [messages, loading, error] = useCollectionData(q, { idField: 'id' });
+  const [messages, loading, error] = useCollectionData(q);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });

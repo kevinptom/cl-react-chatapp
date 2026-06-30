@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { db, auth } from './firebase';
+import { db, auth, dataConverter } from './firebase';
 import { collection, addDoc, query, orderBy, serverTimestamp } from 'firebase/firestore';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -64,9 +64,9 @@ function App() {
   }, [user]);
 
   // Firestore Rooms Collection
-  const roomsRef = collection(db, 'rooms');
+  const roomsRef = collection(db, 'rooms').withConverter(dataConverter);
   const roomsQuery = query(roomsRef, orderBy('createdAt', 'desc'));
-  const [rooms, loading, error] = useCollectionData(roomsQuery, { idField: 'id' });
+  const [rooms, loading, error] = useCollectionData(roomsQuery);
 
   // Auto-seed default rooms if empty
   useEffect(() => {

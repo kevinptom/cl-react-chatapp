@@ -15,3 +15,16 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 export const auth = getAuth(app);
+
+export const dataConverter = {
+  toFirestore(data) {
+    return data;
+  },
+  fromFirestore(snapshot, options) {
+    const data = snapshot.data(options);
+    return {
+      id: snapshot.id,
+      ...data
+    };
+  }
+};
