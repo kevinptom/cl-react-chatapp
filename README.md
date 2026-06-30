@@ -2,7 +2,7 @@
 
 SpaceChat is a fast, real-time chat application built with **React.js** and **Firebase**. It features a stunning glassmorphic visual redesign, dynamic room creation, search filters, and persistent user nicknames, providing an immersive and fast messaging experience.
 
-### 🚀 [View Live Demo](https://kevinptom.github.io/cl-react-chatapp/)
+### 🚀 [View Live Demo]( https://cl-react-chatapp-xi.vercel.app/)
 
 ---
 
