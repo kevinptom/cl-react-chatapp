@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
-import { db } from './firebase';
+import { db, auth } from './firebase';
 import { collection, addDoc, query, orderBy, serverTimestamp } from 'firebase/firestore';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { updateProfile, signOut } from 'firebase/auth';
 import ChatRoom from './ChatRoom';
+import Auth from './Auth';
 import './App.css';
 
 const ADJECTIVES = ['Swift', 'Neon', 'Misty', 'Hyper', 'Golden', 'Cosmic', 'Pixel', 'Quantum', 'Sneaky', 'Epic', 'Astral', 'Solar'];
@@ -19,6 +22,7 @@ const generateRandomNickname = () => {
 
 // Simple hash function to generate a consistent color based on string
 export const getStringColor = (str) => {
+  if (!str) return '#7c3aed';
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
     hash = str.charCodeAt(i) + ((hash << 5) - hash);
@@ -31,29 +35,33 @@ export const getStringColor = (str) => {
 };
 
 function App() {
+  const [user, loadingAuth] = useAuthState(auth);
   const [currentRoom, setCurrentRoom] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   
   // Nickname State
-  const [nickname, setNickname] = useState(() => {
-    const stored = localStorage.getItem('chat_nickname');
-    if (stored) return stored;
-    const gen = generateRandomNickname();
-    localStorage.setItem('chat_nickname', gen);
-    return gen;
-  });
+  const [nickname, setNickname] = useState('');
 
   // Modal States
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [tempNickname, setTempNickname] = useState(nickname);
+  const [tempNickname, setTempNickname] = useState('');
 
   // Form States for New Room
   const [newRoomName, setNewRoomName] = useState('');
   const [newRoomDesc, setNewRoomDesc] = useState('');
   const [newRoomCategory, setNewRoomCategory] = useState('Social');
   const [newRoomEmoji, setNewRoomEmoji] = useState('💬');
+
+  // Initialize and synchronize nickname state when user changes
+  useEffect(() => {
+    if (user) {
+      setNickname(user.displayName || user.email?.split('@')[0] || 'Anonymous');
+    } else {
+      setNickname('');
+    }
+  }, [user]);
 
   // Firestore Rooms Collection
   const roomsRef = collection(db, 'rooms');
@@ -90,7 +98,8 @@ function App() {
       category: newRoomCategory,
       emoji: newRoomEmoji,
       createdAt: serverTimestamp(),
-      createdBy: nickname
+      createdBy: nickname,
+      createdByUid: user?.uid || 'anonymous'
     });
 
     // Reset Form
@@ -101,12 +110,30 @@ function App() {
     setIsCreateOpen(false);
   };
 
-  const handleSaveProfile = (e) => {
+  const handleSaveProfile = async (e) => {
     e.preventDefault();
-    if (tempNickname.trim()) {
-      setNickname(tempNickname.trim());
-      localStorage.setItem('chat_nickname', tempNickname.trim());
+    if (tempNickname.trim() && user) {
+      try {
+        await updateProfile(auth.currentUser, {
+          displayName: tempNickname.trim()
+        });
+        setNickname(tempNickname.trim());
+        setIsProfileOpen(false);
+      } catch (err) {
+        console.error(err);
+        alert('Failed to update nickname: ' + err.message);
+      }
+    }
+  };
+
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
+      setCurrentRoom(null);
       setIsProfileOpen(false);
+    } catch (err) {
+      console.error(err);
+      alert('Failed to sign out: ' + err.message);
     }
   };
 
@@ -120,6 +147,33 @@ function App() {
 
   const userColor = getStringColor(nickname);
 
+  // 1. Loading Auth State
+  if (loadingAuth) {
+    return (
+      <div className="App" style={{ justifyContent: 'center', alignItems: 'center' }}>
+        <div className="chat-loading">
+          <div className="spinner"></div>
+          <p>Connecting to SpaceChat...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // 2. Unauthenticated Screen
+  if (!user) {
+    return (
+      <div className="App">
+        <header>
+          <div className="logo-section">
+            <h1><span>💬</span> SpaceChat</h1>
+          </div>
+        </header>
+        <Auth />
+      </div>
+    );
+  }
+
+  // 3. Main Authenticated Application Screen
   return (
     <div className="App">
       <header>
@@ -134,7 +188,11 @@ function App() {
           }}
         >
           <div className="avatar-dot" style={{ backgroundColor: userColor }}>
-            {nickname.charAt(0).toUpperCase()}
+            {user.photoURL ? (
+              <img src={user.photoURL} alt={nickname} className="avatar-img" />
+            ) : (
+              nickname.charAt(0).toUpperCase()
+            )}
           </div>
           <span className="username-display">{nickname}</span>
         </div>
@@ -239,7 +297,7 @@ function App() {
                 Leave Room
               </button>
             </div>
-            <ChatRoom roomName={currentRoom.id} userName={nickname} />
+            <ChatRoom roomName={currentRoom.id} user={user} />
           </main>
         </div>
       )}
@@ -253,6 +311,16 @@ function App() {
               <button className="close-btn" onClick={() => setIsProfileOpen(false)}>×</button>
             </div>
             <form onSubmit={handleSaveProfile}>
+              <div className="form-group" style={{ marginBottom: '1rem', opacity: 0.8 }}>
+                <label>Email Address</label>
+                <input 
+                  type="text" 
+                  value={user.email || 'Google Account'} 
+                  disabled 
+                  style={{ cursor: 'not-allowed', background: 'rgba(0,0,0,0.02)' }}
+                />
+              </div>
+
               <div className="form-group">
                 <label htmlFor="nickname">Your Nickname</label>
                 <input 
@@ -265,13 +333,19 @@ function App() {
                   required
                 />
               </div>
-              <div className="modal-actions">
-                <button type="button" className="btn btn-secondary" onClick={() => setIsProfileOpen(false)}>
-                  Cancel
+
+              <div className="modal-actions" style={{ justifyContent: 'space-between' }}>
+                <button type="button" className="btn btn-danger" onClick={handleSignOut}>
+                  Sign Out
                 </button>
-                <button type="submit" className="btn btn-primary">
-                  Save Changes
-                </button>
+                <div style={{ display: 'flex', gap: '0.75rem' }}>
+                  <button type="button" className="btn btn-secondary" onClick={() => setIsProfileOpen(false)}>
+                    Cancel
+                  </button>
+                  <button type="submit" className="btn btn-primary">
+                    Save Changes
+                  </button>
+                </div>
               </div>
             </form>
           </div>

@@ -4,10 +4,12 @@ import { collection, addDoc, query, orderBy, serverTimestamp } from 'firebase/fi
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { getStringColor } from './App';
 
-export default function ChatRoom({ roomName, userName }) {
+export default function ChatRoom({ roomName, user }) {
   const [formValue, setFormValue] = useState('');
   const messagesEndRef = useRef(null);
   
+  const userName = user ? (user.displayName || user.email?.split('@')[0] || 'Anonymous') : 'Anonymous';
+
   // Reference the specific room's messages collection
   const messagesRef = collection(db, `rooms/${roomName}/messages`);
   const q = query(messagesRef, orderBy('createdAt', 'asc'));
@@ -30,7 +32,9 @@ export default function ChatRoom({ roomName, userName }) {
     await addDoc(messagesRef, {
       text: formValue.trim(),
       createdAt: serverTimestamp(),
-      user: userName || 'Anonymous'
+      user: userName,
+      uid: user?.uid || 'anonymous',
+      avatar: user?.photoURL || null
     });
 
     setFormValue('');
@@ -69,7 +73,7 @@ export default function ChatRoom({ roomName, userName }) {
         )}
 
         {!loading && messages && messages.map((msg) => {
-          const isSelf = msg.user === userName;
+          const isSelf = msg.uid ? (msg.uid === user?.uid) : (msg.user === userName);
           const userColor = getStringColor(msg.user || 'Anonymous');
           const firstLetter = (msg.user || 'A').charAt(0).toUpperCase();
 
@@ -81,7 +85,11 @@ export default function ChatRoom({ roomName, userName }) {
                   style={{ backgroundColor: userColor }}
                   title={msg.user}
                 >
-                  {firstLetter}
+                  {msg.avatar ? (
+                    <img src={msg.avatar} alt={msg.user} className="avatar-img" />
+                  ) : (
+                    firstLetter
+                  )}
                 </div>
               )}
               <div className="message-content-wrapper">
