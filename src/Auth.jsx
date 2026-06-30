@@ -50,6 +50,8 @@ export default function Auth() {
         friendlyMessage = 'Incorrect email or password.';
       } else if (err.code === 'auth/missing-password') {
         friendlyMessage = 'Please enter a password.';
+      } else if (err.code === 'auth/operation-not-allowed') {
+        friendlyMessage = 'Email/Password sign-in is disabled in the Firebase Console. Please enable it in the Firebase Console under Authentication > Sign-in method.';
       }
       setError(friendlyMessage);
     } finally {
